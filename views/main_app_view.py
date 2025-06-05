@@ -92,26 +92,26 @@ class MainAppView(QMainWindow):
         # --- Lógica para adicionar botões com base no tipo de usuário ---
         if self.user_type == 'adm': # Botões para administrador
             # Botão Agenda Geral (Admin)
-            btn_agenda_adm = self._create_sidebar_button("🗓️ Agenda Geral", page_idx_counter)
+            btn_agenda_adm = self._create_sidebar_button(" Agenda Geral", page_idx_counter)
             sidebar_layout.addWidget(btn_agenda_adm)
             self.sidebar_buttons[page_idx_counter] = {'button': btn_agenda_adm, 'widget_name': 'agenda_view_adm'}
             page_idx_counter += 1
 
             # Botão Painel Admin
-            btn_admin_panel = self._create_sidebar_button("⚙️ Painel Admin", page_idx_counter)
+            btn_admin_panel = self._create_sidebar_button(" Painel Admin", page_idx_counter)
             sidebar_layout.addWidget(btn_admin_panel)
             self.sidebar_buttons[page_idx_counter] = {'button': btn_admin_panel, 'widget_name': 'admin_panel_view'}
             page_idx_counter += 1
 
             # Botão Gerenciar Vistoriadores
-            btn_gerenciar_vist = self._create_sidebar_button("👨‍💼 Gerenciar Vistoriadores", page_idx_counter)
+            btn_gerenciar_vist = self._create_sidebar_button(" Gerenciar Vistoriadores", page_idx_counter)
             sidebar_layout.addWidget(btn_gerenciar_vist)
             self.sidebar_buttons[page_idx_counter] = {'button': btn_gerenciar_vist, 'widget_name': 'gerenciar_vist_view'}
             page_idx_counter += 1
 
         elif self.user_type == 'vistoriador': # Botões para vistoriador
             # Botão Minha Agenda (Vistoriador)
-            btn_minha_agenda_vist = self._create_sidebar_button("📅 Minha Agenda", page_idx_counter)
+            btn_minha_agenda_vist = self._create_sidebar_button(" Minha Agenda", page_idx_counter)
             sidebar_layout.addWidget(btn_minha_agenda_vist)
             self.sidebar_buttons[page_idx_counter] = {'button': btn_minha_agenda_vist, 'widget_name': 'vistoriador_agenda_page'}
             page_idx_counter += 1

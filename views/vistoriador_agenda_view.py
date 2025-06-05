@@ -137,7 +137,7 @@ class VistoriadorAgendaViewWidget(QWidget):
         self.main_layout.addLayout(content_splitter_layout) # Adiciona o layout das duas colunas
 
         # Botão para atualizar ambas as listas
-        btn_atualizar_tudo = QPushButton("🔄 Atualizar Minha Agenda")
+        btn_atualizar_tudo = QPushButton(" Atualizar Minha Agenda")
         btn_atualizar_tudo.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         btn_atualizar_tudo.clicked.connect(self._carregar_dados_iniciais)
         self.main_layout.addWidget(btn_atualizar_tudo, 0, Qt.AlignCenter) # Centralizado abaixo das listas
