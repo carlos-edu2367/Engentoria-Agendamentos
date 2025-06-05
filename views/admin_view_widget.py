@@ -80,19 +80,19 @@ class AdminViewWidget(QWidget):
         action_buttons_layout.setAlignment(Qt.AlignTop) # Alinha botões ao topo
 
         # Botão para adicionar cliente
-        self.btn_add_cliente = QPushButton("➕ Adicionar Cliente")
+        self.btn_add_cliente = QPushButton(" Adicionar Cliente")
         self.btn_add_cliente.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_add_cliente.clicked.connect(self._mostrar_form_add_cliente)
         action_buttons_layout.addWidget(self.btn_add_cliente)
 
         # Botão para adicionar imobiliária
-        self.btn_add_imobiliaria = QPushButton("🏠 Adicionar Imobiliária")
+        self.btn_add_imobiliaria = QPushButton(" Adicionar Imobiliária")
         self.btn_add_imobiliaria.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_add_imobiliaria.clicked.connect(self._mostrar_form_add_imobiliaria)
         action_buttons_layout.addWidget(self.btn_add_imobiliaria)
 
         # Botão para adicionar vistoriador
-        self.btn_add_vistoriador = QPushButton("👨‍🔧 Adicionar Vistoriador")
+        self.btn_add_vistoriador = QPushButton(" Adicionar Vistoriador")
         self.btn_add_vistoriador.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_add_vistoriador.clicked.connect(self._mostrar_form_add_vistoriador)
         action_buttons_layout.addWidget(self.btn_add_vistoriador)
@@ -100,13 +100,13 @@ class AdminViewWidget(QWidget):
         action_buttons_layout.addWidget(self._criar_separador()) # Separador visual
 
         # Botão para remover vistoriador
-        self.btn_rem_vistoriador = QPushButton("🚫 Remover Vistoriador")
+        self.btn_rem_vistoriador = QPushButton(" Remover Vistoriador")
         self.btn_rem_vistoriador.setStyleSheet(styles.SECONDARY_BUTTON_STYLE) # Poderia ser DANGER_BUTTON_STYLE se a ação fosse imediata
         self.btn_rem_vistoriador.clicked.connect(self._mostrar_form_remover_vistoriador)
         action_buttons_layout.addWidget(self.btn_rem_vistoriador)
 
         # Botão para remover imobiliária
-        self.btn_rem_imobiliaria = QPushButton("🗑️ Remover Imobiliária")
+        self.btn_rem_imobiliaria = QPushButton(" Remover Imobiliária")
         self.btn_rem_imobiliaria.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_rem_imobiliaria.clicked.connect(self._mostrar_form_remover_imobiliaria)
         action_buttons_layout.addWidget(self.btn_rem_imobiliaria)
@@ -114,7 +114,7 @@ class AdminViewWidget(QWidget):
         action_buttons_layout.addWidget(self._criar_separador()) # Outro separador
 
         # Botão para seção de relatórios
-        self.btn_relatorios = QPushButton("📊 Relatórios")
+        self.btn_relatorios = QPushButton(" Relatórios")
         self.btn_relatorios.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_relatorios.clicked.connect(self._mostrar_opcoes_relatorios)
         action_buttons_layout.addWidget(self.btn_relatorios)

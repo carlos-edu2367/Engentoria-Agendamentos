@@ -117,7 +117,7 @@ class AgendaViewWidget(QWidget):
         layout_lista.addWidget(self.lista_horarios_widget)
 
         # Botão para iniciar o agendamento
-        self.btn_iniciar_agendamento = QPushButton("➡️ Prosseguir para Agendamento")
+        self.btn_iniciar_agendamento = QPushButton(" Prosseguir para Agendamento")
         self.btn_iniciar_agendamento.setStyleSheet(styles.PRIMARY_BUTTON_STYLE)
         self.btn_iniciar_agendamento.setEnabled(False) # Habilitado apenas quando um horário é selecionado
         self.btn_iniciar_agendamento.clicked.connect(self._iniciar_fluxo_agendamento)
@@ -235,11 +235,11 @@ class AgendaViewWidget(QWidget):
         layout.addWidget(self.combo_clientes_agendamento)
 
         # Botões de navegação da etapa
-        btn_proximo_cliente = QPushButton("Próximo ➡️")
+        btn_proximo_cliente = QPushButton("Próximo ")
         btn_proximo_cliente.setStyleSheet(styles.PRIMARY_BUTTON_STYLE)
         btn_proximo_cliente.clicked.connect(self._avancar_para_etapa_imobiliaria)
 
-        btn_voltar_lista_horarios = QPushButton("⬅️ Voltar para Horários")
+        btn_voltar_lista_horarios = QPushButton(" Voltar para Horários")
         btn_voltar_lista_horarios.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         btn_voltar_lista_horarios.clicked.connect(self._voltar_para_lista_horarios)
 
@@ -365,11 +365,11 @@ class AgendaViewWidget(QWidget):
         layout.addWidget(self.combo_imobiliarias_agendamento)
 
         # Botões de navegação
-        btn_proximo_imob = QPushButton("Próximo ➡️")
+        btn_proximo_imob = QPushButton("Próximo ")
         btn_proximo_imob.setStyleSheet(styles.PRIMARY_BUTTON_STYLE)
         btn_proximo_imob.clicked.connect(self._avancar_para_etapa_imovel)
 
-        btn_voltar_cliente = QPushButton("⬅️ Voltar para Cliente")
+        btn_voltar_cliente = QPushButton(" Voltar para Cliente")
         btn_voltar_cliente.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         btn_voltar_cliente.clicked.connect(lambda: self.form_agendamento_stack.setCurrentIndex(0)) # Volta para etapa anterior
 
@@ -477,11 +477,11 @@ class AgendaViewWidget(QWidget):
         main_layout_etapa.addWidget(scroll_area) # Adiciona o scroll area ao layout principal da etapa
 
         # Botões de ação
-        btn_confirmar_agendamento = QPushButton("✔️ Confirmar Agendamento")
+        btn_confirmar_agendamento = QPushButton(" Confirmar Agendamento")
         btn_confirmar_agendamento.setStyleSheet(styles.PRIMARY_BUTTON_STYLE)
         btn_confirmar_agendamento.clicked.connect(self._submeter_agendamento_final)
 
-        btn_voltar_imobiliaria = QPushButton("⬅️ Voltar para Imobiliária")
+        btn_voltar_imobiliaria = QPushButton(" Voltar para Imobiliária")
         btn_voltar_imobiliaria.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         btn_voltar_imobiliaria.clicked.connect(lambda: self.form_agendamento_stack.setCurrentIndex(1)) # Volta para etapa anterior
 
