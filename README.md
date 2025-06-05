@@ -44,7 +44,7 @@ Este é um sistema de desktop para agendamento de vistorias e controle de vistor
    ```
 4. **Instale as dependências:**
    ```bash
-   pip install pandas, openpyxl
+   pip install pandas openpyxl pyqt5
    ```
 5. **Execute a aplicação:**
    ```bash
