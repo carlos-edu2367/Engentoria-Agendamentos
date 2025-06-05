@@ -1,0 +1,29 @@
+# Ambientes Virtuais
+venv/
+*.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Arquivos de Cache e Bytecode do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de Banco de Dados SQLite 
+*.sqlite3
+*.db
+
+# Arquivos de IDEs e Editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.komodoproject
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de log
+*.log
