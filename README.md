@@ -23,7 +23,7 @@ Este é um sistema de desktop para agendamento de vistorias e controle de vistor
 
 * **Linguagem:** Python 3
 * **Interface Gráfica:** PyQt5
-* **Banco de Dados:** SQLite (ou o que você estiver usando)
+* **Banco de Dados:** SQLite (projeção para futura implementação de postgrees)
 
 ## Como Executar
 
