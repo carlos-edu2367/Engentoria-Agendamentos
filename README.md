@@ -51,6 +51,12 @@ Este é um sistema de desktop para agendamento de vistorias e controle de vistor
    python app.py
    ```
 
+E-mail e senha padrão:
+
+*admin@adm.com*
+
+*123123*
+
 ## Estrutura do Projeto
 
 engentoria/
