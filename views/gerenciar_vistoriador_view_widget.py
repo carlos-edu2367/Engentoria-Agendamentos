@@ -431,8 +431,8 @@ class GerenciarVistoriadorViewWidget(QWidget):
         self.disponibilidade_tab = QWidget()
 
         # Adiciona as abas ao QTabWidget
-        self.tab_widget.addTab(self.agenda_tab, "📅 Agenda e Vistorias")
-        self.tab_widget.addTab(self.disponibilidade_tab, "⚙️ Configurar Disponibilidade")
+        self.tab_widget.addTab(self.agenda_tab, " Agenda e Vistorias")
+        self.tab_widget.addTab(self.disponibilidade_tab, " Configurar Disponibilidade")
 
         # Configura o conteúdo interno de cada aba
         self._setup_agenda_vistorias_tab_content(self.agenda_tab)
@@ -683,7 +683,7 @@ class GerenciarVistoriadorViewWidget(QWidget):
 
         # --- Botões de Ação Principais (toggle para formulários de edição/reagendamento) ---
         # Estes botões são mostrados quando um agendamento ativo é selecionado.
-        self.btn_toggle_edit_form = QPushButton("✏️ Editar Dados da Vistoria")
+        self.btn_toggle_edit_form = QPushButton(" Editar Dados da Vistoria")
         self.btn_toggle_edit_form.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_toggle_edit_form.setCheckable(True) # Botão de alternância (on/off)
         self.btn_toggle_edit_form.toggled.connect( # Ao ser clicado, mostra/oculta o formulário de edição
@@ -691,7 +691,7 @@ class GerenciarVistoriadorViewWidget(QWidget):
         )
         self.details_action_layout.addWidget(self.btn_toggle_edit_form)
 
-        self.btn_toggle_reagendar_form = QPushButton("🔄 Reagendar (Mudar Data/Hora)")
+        self.btn_toggle_reagendar_form = QPushButton(" Reagendar (Mudar Data/Hora)")
         self.btn_toggle_reagendar_form.setStyleSheet(styles.SECONDARY_BUTTON_STYLE)
         self.btn_toggle_reagendar_form.setCheckable(True)
         self.btn_toggle_reagendar_form.toggled.connect( # Mostra/oculta formulário de reagendamento
@@ -700,7 +700,7 @@ class GerenciarVistoriadorViewWidget(QWidget):
         self.details_action_layout.addWidget(self.btn_toggle_reagendar_form)
 
         # Botão para Marcar como Improdutiva
-        self.btn_marcar_improdutiva = QPushButton("⚠️ Marcar como Improdutiva")
+        self.btn_marcar_improdutiva = QPushButton(" Marcar como Improdutiva")
         self.btn_marcar_improdutiva.setStyleSheet(styles.DANGER_BUTTON_STYLE)
         self.btn_marcar_improdutiva.clicked.connect(self._handle_marcar_improdutiva_action)
         self.details_action_layout.addWidget(self.btn_marcar_improdutiva)
