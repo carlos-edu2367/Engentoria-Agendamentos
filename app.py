@@ -101,7 +101,7 @@ class ApplicationController:
         # Cadastra um usuário administrador padrão se não existir um com o e-mail específico.
         # Isso é útil para a primeira execução do sistema ou para garantir um acesso de fallback.
         from models.usuario_model import login_usuario, cadastrar_usuario # Importação local
-        admin_email = "engentoria@outlook.com"
+        admin_email = "admin@adm.com"
         admin_pass = "123123"
         if not login_usuario(admin_email, admin_pass): # Verifica se o admin já existe tentando logar
             logging.info(f"Usuário admin padrão ('{admin_email}') não encontrado. Tentando cadastrar...")
