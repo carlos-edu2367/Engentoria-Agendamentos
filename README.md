@@ -65,7 +65,6 @@ engentoria/
 ├── models/ # Lógica de dados e interação com banco
 ├── views/ # Componentes da interface gráfica
 ├── utils/ # Utilitários (estilos, validadores, helpers)
-├── assets/ # (Opcional) Imagens, ícones
 ├── .gitignore
 ├── README.md
 └── requirements.txt
