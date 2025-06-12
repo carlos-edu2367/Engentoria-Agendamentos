@@ -30,7 +30,7 @@ Este é um sistema de desktop para agendamento de vistorias e controle de vistor
 1. **Pré-requisitos:**
    * Python 3.12
    * Pip (gerenciador de pacotes Python)
-2. **Clone o repositório (após subir no GitHub):**
+2. **Clone o repositório :**
    ```bash
    git clone https://github.com/carlos-edu2367/Engentoria-Agendamentos.git
    ```
