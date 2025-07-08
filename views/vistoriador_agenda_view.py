@@ -176,7 +176,7 @@ class VistoriadorAgendaViewWidget(QWidget):
 
             # Monta o texto do item da lista com informações relevantes
             texto_item = f"{dia_semana} {data_f} às {hora_f} - {ag['tipo_vistoria'].upper()}\n" # TIPO EM MAIÚSCULO
-            texto_item += f"Imóvel: {ag.get('cod_imovel', 'N/D')} - {ag.get('endereco', 'Endereço não informado')}\n"
+            texto_item += f"Imóvel: {ag.get('cod_imovel', 'N/D')} - {ag.get('endereco_imovel', 'Endereço não informado')}\n"
             texto_item += f"Cliente: {ag.get('nome_cliente', 'N/D')}"
             # Poderia adicionar mais detalhes como nome da imobiliária, observações, etc.
 
