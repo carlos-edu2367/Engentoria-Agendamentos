@@ -8,7 +8,7 @@ DB_NAME = "engentoria.db"
 # Diretório base do projeto (assume-se que a pasta 'models' está um nível abaixo da raiz 'engentoria')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Caminho completo para o arquivo do banco de dados
-DB_PATH = os.path.join(BASE_DIR, DB_NAME)
+DB_PATH = DB_NAME
 
 
 def conectar_banco() -> sqlite3.Connection:
