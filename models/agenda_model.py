@@ -222,7 +222,7 @@ def registrar_vistoria_improdutiva(
         """, (valor_cobranca, cliente_id))
 
         # 3. Atualiza o status do agendamento original na tabela `agenda`
-        # Define o tipo como 'IMPRODUTIVA' e `disponivel = 0`.
+        # Define o tipo como 'IMPRODUTIVA', e `disponivel = 0`.
         # A condição `tipo NOT IN ('LIVRE', 'FECHADO', 'IMPRODUTIVA')` previne que horários
         # que já não são vistorias ativas (ex: um horário livre ou já fechado) sejam indevidamente alterados.
         cursor.execute("""
@@ -1049,18 +1049,19 @@ def _executar_query_relatorio_vistoria(query: str, params: tuple) -> pd.DataFram
         if not df.empty:
             # Calcula a coluna "Valor Vistoriador (R$)" aplicando a função `calcular_valor_vistoriador`
             # a cada linha do DataFrame.
-            # As colunas "Tipo Mobília" e "Tipo Vistoria Agenda" são usadas para este cálculo
-            # e depois podem ser removidas do DataFrame final se não forem necessárias no relatório.
+            # As colunas "Tipo Mobília" e "Tipo Vistoria Agenda" são usadas para este cálculo.
             df["Valor Vistoriador (R$)"] = df.apply(
                 lambda row: calcular_valor_vistoriador(
-                    tamanho_m2=row["Tamanho (m2)"], # A query já nomeia como "Tamanho (m2)"
+                    tamanho_m2=row["Tamanho (m2)"], 
                     mobiliado_status=row["Tipo Mobília"],
                     tipo_vistoria_agenda=row["Tipo Vistoria Agenda"]
                 ), axis=1 # `axis=1` para aplicar a função por linha
             )
-            # Remove colunas auxiliares usadas apenas para o cálculo, se não forem desejadas no relatório final.
-            # `errors='ignore'` previne erro se as colunas não existirem (embora devam existir pela query).
-            df = df.drop(columns=["Tipo Mobília", "Tipo Vistoria Agenda"], errors='ignore')
+            # Remove a coluna auxiliar "Tipo Mobília"
+            df = df.drop(columns=["Tipo Mobília"], errors='ignore')
+            # Renomeia a coluna "Tipo Vistoria Agenda" para "Tipo de Vistoria" para exibição no relatório
+            if "Tipo Vistoria Agenda" in df.columns:
+                df = df.rename(columns={"Tipo Vistoria Agenda": "Tipo de Vistoria"})
         return df
     except Exception as e:
         logging.error(f"Erro ao executar query de relatório de vistoria ou calcular valor do vistoriador: {e}", exc_info=True)
@@ -1097,7 +1098,7 @@ def obter_dados_relatorio_entrada_geral(data_inicio: str, data_fim: str) -> pd.D
     return _executar_query_relatorio_vistoria(query, (data_inicio, data_fim))
 
 def obter_dados_relatorio_saida_geral(data_inicio: str, data_fim: str) -> pd.DataFrame:
-    """Relatório geral de vistorias de SAIDA dentro de um período."""
+    """Relatório geral de vistorias de SAIDA e CONFERENCIA dentro de um período."""
     query = """
         SELECT
             strftime('%d/%m/%Y', a.data) AS "Data Vistoria",
@@ -1116,7 +1117,7 @@ def obter_dados_relatorio_saida_geral(data_inicio: str, data_fim: str) -> pd.Dat
         LEFT JOIN imoveis i ON a.imovel_id = i.id
         LEFT JOIN clientes c ON i.cliente_id = c.id
         LEFT JOIN imobiliarias imob ON i.imobiliaria_id = imob.id
-        WHERE a.tipo = 'SAIDA' AND a.data BETWEEN ? AND ? /* Filtra por tipo SAIDA e período */
+        WHERE a.tipo IN ('SAIDA', 'CONFERENCIA') AND a.data BETWEEN ? AND ? /* Filtra por tipo SAIDA ou CONFERENCIA e período */
         ORDER BY a.data, a.horario
     """
     return _executar_query_relatorio_vistoria(query, (data_inicio, data_fim))
@@ -1147,7 +1148,7 @@ def obter_dados_relatorio_entrada_por_vistoriador(data_inicio: str, data_fim: st
     return _executar_query_relatorio_vistoria(query, (vistoriador_id, data_inicio, data_fim))
 
 def obter_dados_relatorio_saida_por_vistoriador(data_inicio: str, data_fim: str, vistoriador_id: int) -> pd.DataFrame:
-    """Relatório de vistorias de SAIDA para um vistoriador específico, dentro de um período."""
+    """Relatório de vistorias de SAIDA e CONFERENCIA para um vistoriador específico, dentro de um período."""
     query = """
         SELECT
             strftime('%d/%m/%Y', a.data) AS "Data Vistoria",
@@ -1164,7 +1165,7 @@ def obter_dados_relatorio_saida_por_vistoriador(data_inicio: str, data_fim: str,
         LEFT JOIN imoveis i ON a.imovel_id = i.id
         LEFT JOIN clientes c ON i.cliente_id = c.id
         LEFT JOIN imobiliarias imob ON i.imobiliaria_id = imob.id
-        WHERE a.tipo = 'SAIDA' AND a.vistoriador_id = ? AND a.data BETWEEN ? AND ?
+        WHERE a.tipo IN ('SAIDA', 'CONFERENCIA') AND a.vistoriador_id = ? AND a.data BETWEEN ? AND ?
         ORDER BY a.data, a.horario
     """
     return _executar_query_relatorio_vistoria(query, (vistoriador_id, data_inicio, data_fim))
@@ -1195,7 +1196,7 @@ def obter_dados_relatorio_entrada_por_imobiliaria(data_inicio: str, data_fim: st
     return _executar_query_relatorio_vistoria(query, (imobiliaria_id, data_inicio, data_fim))
 
 def obter_dados_relatorio_saida_por_imobiliaria(data_inicio: str, data_fim: str, imobiliaria_id: int) -> pd.DataFrame:
-    """Relatório de vistorias de SAIDA para uma imobiliária específica, dentro de um período."""
+    """Relatório de vistorias de SAIDA e CONFERENCIA para uma imobiliária específica, dentro de um período."""
     query = """
         SELECT
             strftime('%d/%m/%Y', a.data) AS "Data Vistoria",
@@ -1212,7 +1213,7 @@ def obter_dados_relatorio_saida_por_imobiliaria(data_inicio: str, data_fim: str,
         JOIN usuarios u ON a.vistoriador_id = u.id
         LEFT JOIN imoveis i ON a.imovel_id = i.id
         LEFT JOIN clientes c ON i.cliente_id = c.id
-        WHERE a.tipo = 'SAIDA' AND i.imobiliaria_id = ? AND a.data BETWEEN ? AND ?
+        WHERE a.tipo IN ('SAIDA', 'CONFERENCIA') AND i.imobiliaria_id = ? AND a.data BETWEEN ? AND ?
         ORDER BY a.data, a.horario
     """
     return _executar_query_relatorio_vistoria(query, (imobiliaria_id, data_inicio, data_fim))
@@ -1340,11 +1341,7 @@ if __name__ == '__main__':
     
     # Teste da função de deleção de agendamentos antigos
     logging.info("\n--- Testando Deleção de Agendamentos Antigos ---")
-    # Para testar, seria preciso ter agendamentos antigos no banco.
-    # Ex: adicionar_entrada_agenda_unica(id_vist_teste, "2023-01-01", "10:00", tipo="ENTRADA", disponivel=False, imovel_id=id_imovel_teste)
-    # E depois chamar:
-    # contagem_delecao = deletar_agendamentos_antigos_e_dados_relacionados(meses_antiguidade=6)
-    # logging.info(f"Resultado da deleção de agendamentos antigos: {contagem_delecao}")
+   
     logging.info("Teste de deleção de agendamentos antigos não executado em detalhe (requer dados antigos específicos).")
 
 

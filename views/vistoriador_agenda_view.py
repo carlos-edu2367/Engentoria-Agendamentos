@@ -2,7 +2,8 @@
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
-    QListWidgetItem, QComboBox, QScrollArea, QFrame, QMessageBox, QInputDialog
+    QListWidgetItem, QComboBox, QScrollArea, QFrame, QMessageBox, QInputDialog,
+    QTextEdit # Adicionado QTextEdit
 )
 from PyQt5.QtGui import QFont, QColor
 from PyQt5.QtCore import Qt, QSize
@@ -96,43 +97,65 @@ class VistoriadorAgendaViewWidget(QWidget):
         agendamentos_layout.addWidget(self.combo_filtro_agendamentos_vist)
 
         self.lista_meus_agendamentos = QListWidget() # Lista para exibir os agendamentos
-        # self.lista_meus_agendamentos.setStyleSheet(...) # Pode-se adicionar estilo específico se necessário
+        self.lista_meus_agendamentos.setStyleSheet(f"""
+            QListWidget {{
+                background-color: {styles.COLOR_BACKGROUND_INPUT};
+                border: 1px solid {styles.COLOR_BORDER_MEDIUM};
+                border-radius: 5px; padding: 0px; font-size: 14px; outline: 0;
+            }}
+            QListWidget::item {{
+                padding: 10px 8px; border-bottom: 1px solid {styles.COLOR_BORDER_DARK};
+                color: {styles.COLOR_TEXT_SECONDARY}; border-radius: 4px;
+            }}
+            QListWidget::item:alternate {{ background-color: {styles.COLOR_BACKGROUND_LIGHT}; }}
+            QListWidget::item:selected {{
+                background-color: {styles.COLOR_ACCENT_PRIMARY_PRESSED}; color: {styles.COLOR_TEXT_PRIMARY};
+                font-weight: bold;
+            }}
+            QListWidget::item:hover {{
+                background-color: {styles.COLOR_ACCENT_SECONDARY_HOVER}; color: {styles.COLOR_TEXT_PRIMARY};
+            }}
+        """)
+        self.lista_meus_agendamentos.itemClicked.connect(self._on_agendamento_selected) # Conecta o clique do item
         agendamentos_layout.addWidget(self.lista_meus_agendamentos)
 
         content_splitter_layout.addWidget(agendamentos_panel, 1) # Ocupa metade do espaço (fator 1)
 
-        # --- Painel de Horários Disponíveis (Direita) ---
-        disponiveis_panel = QFrame()
-        disponiveis_panel.setFrameShape(QFrame.StyledPanel)
-        disponiveis_panel.setStyleSheet(f"QFrame {{ border: 1px solid {styles.COLOR_BORDER_DARK}; border-radius: 5px; background-color: {styles.COLOR_BACKGROUND_MEDIUM};}}")
-        disponiveis_layout = QVBoxLayout(disponiveis_panel) # Layout interno do painel
-        disponiveis_layout.setContentsMargins(15,15,15,15)
-        disponiveis_layout.setSpacing(10)
+        # --- Painel de Detalhes do Agendamento (Direita) ---
+        self.detalhes_agendamento_panel = QFrame()
+        self.detalhes_agendamento_panel.setFrameShape(QFrame.StyledPanel)
+        self.detalhes_agendamento_panel.setStyleSheet(f"QFrame {{ border: 1px solid {styles.COLOR_BORDER_DARK}; border-radius: 5px; background-color: {styles.COLOR_BACKGROUND_MEDIUM};}}")
+        detalhes_layout = QVBoxLayout(self.detalhes_agendamento_panel)
+        detalhes_layout.setContentsMargins(15,15,15,15)
+        detalhes_layout.setSpacing(10)
 
-        lbl_meus_disponiveis = QLabel("Meus Horários Disponíveis")
-        lbl_meus_disponiveis.setStyleSheet(styles.SUBTITLE_LABEL_STYLE)
-        disponiveis_layout.addWidget(lbl_meus_disponiveis)
+        lbl_detalhes_titulo = QLabel("Detalhes do Agendamento")
+        lbl_detalhes_titulo.setStyleSheet(styles.SUBTITLE_LABEL_STYLE)
+        detalhes_layout.addWidget(lbl_detalhes_titulo)
 
-        # Filtro por período para horários disponíveis
-        self.combo_filtro_disponiveis_vist = QComboBox()
-        self.combo_filtro_disponiveis_vist.addItems(["Próximos 7 dias", "Hoje", "Amanhã", "Esta semana", "Próximas 2 semanas", "Todos os horários"])
-        self.combo_filtro_disponiveis_vist.currentIndexChanged.connect(self._carregar_meus_horarios_disponiveis) # Recarrega ao mudar
-        disponiveis_layout.addWidget(self.combo_filtro_disponiveis_vist)
+        self.detalhes_agendamento_text_edit = QTextEdit()
+        self.detalhes_agendamento_text_edit.setReadOnly(True) # Apenas leitura
+        self.detalhes_agendamento_text_edit.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {styles.COLOR_BACKGROUND_INPUT};
+                color: {styles.COLOR_TEXT_PRIMARY};
+                border: 1px solid {styles.COLOR_BORDER_MEDIUM};
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+            }}
+        """)
+        detalhes_layout.addWidget(self.detalhes_agendamento_text_edit)
 
-        self.lista_meus_horarios_disponiveis = QListWidget() # Lista para exibir horários disponíveis
-        disponiveis_layout.addWidget(self.lista_meus_horarios_disponiveis)
+        # Placeholder inicial para o painel de detalhes
+        self.detalhes_placeholder_label = QLabel("Selecione um agendamento para ver os detalhes.")
+        self.detalhes_placeholder_label.setAlignment(Qt.AlignCenter)
+        self.detalhes_placeholder_label.setStyleSheet(f"color: {styles.COLOR_TEXT_SECONDARY}; font-size: 14px;")
+        detalhes_layout.addWidget(self.detalhes_placeholder_label)
 
-        # Funcionalidade opcional: Botão para o vistoriador fechar um horário seu
-        # self.btn_fechar_meu_horario = QPushButton("Fechar Horário Selecionado")
-        # self.btn_fechar_meu_horario.setStyleSheet(styles.DANGER_BUTTON_STYLE)
-        # self.btn_fechar_meu_horario.setEnabled(False) # Habilitado apenas ao selecionar um horário
-        # self.btn_fechar_meu_horario.clicked.connect(self._abrir_dialogo_fechar_horario)
-        # disponiveis_layout.addWidget(self.btn_fechar_meu_horario)
-        # self.lista_meus_horarios_disponiveis.itemClicked.connect(
-        #     lambda item: self.btn_fechar_meu_horario.setEnabled(True) if item.data(Qt.UserRole) else False
-        # )
-
-        content_splitter_layout.addWidget(disponiveis_panel, 1) # Ocupa a outra metade (fator 1)
+        self.detalhes_agendamento_text_edit.hide() # Esconde o QTextEdit inicialmente
+        
+        content_splitter_layout.addWidget(self.detalhes_agendamento_panel, 1) # Ocupa a outra metade (fator 1)
 
         self.main_layout.addLayout(content_splitter_layout) # Adiciona o layout das duas colunas
 
@@ -148,7 +171,11 @@ class VistoriadorAgendaViewWidget(QWidget):
         Carrega (ou recarrega) os dados das listas de agendamentos e horários disponíveis.
         """
         self._carregar_meus_agendamentos()
-        self._carregar_meus_horarios_disponiveis()
+        # Limpa o painel de detalhes ao recarregar a lista
+        self.detalhes_agendamento_text_edit.clear()
+        self.detalhes_agendamento_text_edit.hide()
+        self.detalhes_placeholder_label.show()
+
 
     def _carregar_meus_agendamentos(self) -> None:
         """
@@ -174,15 +201,58 @@ class VistoriadorAgendaViewWidget(QWidget):
             hora_f = helpers.formatar_horario_para_exibicao(ag['horario'])
             dia_semana = helpers.traduzir_dia_semana(datetime.datetime.strptime(ag['data'], "%Y-%m-%d").weekday(), abreviado=True)
 
-            # Monta o texto do item da lista com informações relevantes
-            texto_item = f"{dia_semana} {data_f} às {hora_f} - {ag['tipo_vistoria'].upper()}\n" # TIPO EM MAIÚSCULO
-            texto_item += f"Imóvel: {ag.get('cod_imovel', 'N/D')} - {ag.get('endereco_imovel', 'Endereço não informado')}\n"
-            texto_item += f"Cliente: {ag.get('nome_cliente', 'N/D')}"
-            # Poderia adicionar mais detalhes como nome da imobiliária, observações, etc.
-
-            item = QListWidgetItem(texto_item)
-            item.setData(Qt.UserRole, ag['id_agenda']) # Armazena o ID da agenda (do agendamento) no item
+            # Monta um texto resumido para o item da lista
+            texto_item_resumido = (
+                f"{dia_semana} {data_f} às {hora_f} - {ag['tipo_vistoria'].upper()}\n"
+                f"Imóvel: {ag.get('cod_imovel', 'N/D')} | Cliente: {ag.get('nome_cliente', 'N/D')}"
+            )
+            
+            item = QListWidgetItem(texto_item_resumido)
+            item.setData(Qt.UserRole, ag) # Armazena TODOS os dados do agendamento no item
+            # Não define setSizeHint aqui, permitindo que o QListWidget gerencie a altura automaticamente.
             self.lista_meus_agendamentos.addItem(item)
+
+
+    def _on_agendamento_selected(self, item: QListWidgetItem) -> None:
+        """
+        Chamado quando um item da lista de agendamentos é selecionado.
+        Exibe os detalhes completos do agendamento no QTextEdit.
+        """
+        ag_data = item.data(Qt.UserRole) # Recupera todos os dados do agendamento
+
+        if not ag_data: # Se por algum motivo não houver dados
+            self.detalhes_agendamento_text_edit.clear()
+            self.detalhes_agendamento_text_edit.hide()
+            self.detalhes_placeholder_label.show()
+            return
+
+        # Formata os detalhes para exibição no QTextEdit
+        data_f = helpers.formatar_data_para_exibicao(ag_data.get('data', 'N/A'))
+        hora_f = helpers.formatar_horario_para_exibicao(ag_data.get('horario', 'N/A'))
+        dia_semana = helpers.traduzir_dia_semana(datetime.datetime.strptime(ag_data.get('data'), "%Y-%m-%d").weekday(), abreviado=False) # Completo
+
+        detalhes_completos = (
+            f"<b>Tipo de Vistoria:</b> {ag_data.get('tipo_vistoria', 'N/D').upper()}<br>"
+            f"<b>Data:</b> {dia_semana}, {data_f} às {hora_f}<br>"
+            f"<b>Vistoriador:</b> {ag_data.get('nome_vistoriador', 'N/D')}<br>"
+            f"<br>"
+            f"<b>--- Detalhes do Imóvel ---</b><br>"
+            f"<b>Código:</b> {ag_data.get('cod_imovel', 'N/D')}<br>"
+            f"<b>Endereço:</b> {ag_data.get('endereco_imovel', 'N/D')}<br>"
+            f"<b>CEP:</b> {ag_data.get('cep', 'N/D')}<br>"
+            f"<b>Referência:</b> {ag_data.get('referencia', 'N/D')}<br>"
+            f"<b>Tamanho:</b> {ag_data.get('tamanho', 'N/D')}m²<br>"
+            f"<b>Mobília:</b> {ag_data.get('mobiliado', 'N/D').replace('_', ' ').title()}<br>" # Formata para leitura
+            f"<b>Imobiliária:</b> {ag_data.get('nome_imobiliaria', 'N/D')}<br>"
+            f"<br>"
+            f"<b>--- Detalhes do Cliente ---</b><br>"
+            f"<b>Nome:</b> {ag_data.get('nome_cliente', 'N/D')}<br>"
+            f"<b>Email:</b> {ag_data.get('email_cliente', 'N/D')}"
+        )
+
+        self.detalhes_agendamento_text_edit.setHtml(detalhes_completos) # Define o HTML no QTextEdit
+        self.detalhes_placeholder_label.hide() # Esconde o placeholder
+        self.detalhes_agendamento_text_edit.show() # Mostra o QTextEdit
 
 
     def _carregar_meus_horarios_disponiveis(self) -> None:
@@ -263,7 +333,7 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication, QMainWindow # Importações para o teste
     # Importações para setup do banco e dados de teste
     from models.database import criar_tabelas
-    from models import usuario_model, agenda_model # Para popular dados de teste
+    from models import usuario_model, agenda_model, imovel_model, imobiliaria_model # Para popular dados de teste
 
     criar_tabelas() # Garante que o banco e as tabelas existam
 
@@ -284,9 +354,44 @@ if __name__ == '__main__':
         if not agenda_model.listar_horarios_fixos_por_vistoriador(id_vist_teste_view):
             agenda_model.cadastrar_horarios_fixos_vistoriador(id_vist_teste_view, ['1','2','3'], ['09:00', '14:00']) # Ex: Seg, Ter, Qua
         agenda_model.gerar_agenda_baseada_em_horarios_fixos() # Gera a agenda (slots)
-        # Para ter agendamentos visíveis, você precisaria simular o processo de agendamento aqui,
-        # o que envolveria criar cliente, imobiliária, imóvel e depois agendar.
-        # Por simplicidade, o teste focará em horários disponíveis e na estrutura da view.
+        
+        # --- Criar dados de agendamento para teste ---
+        id_cli_teste = usuario_model.cadastrar_cliente("Cliente Teste VistView", "cliente.vistview@teste.com")
+        id_imob_teste = imobiliaria_model.cadastrar_imobiliaria("Imob Teste VistView", 10, 12, 15)
+        
+        if id_cli_teste and id_imob_teste:
+            id_imovel_teste = imovel_model.cadastrar_imovel(
+                cod_imovel="IMV-VV-001",
+                cliente_id=id_cli_teste,
+                imobiliaria_id=id_imob_teste,
+                endereco="Rua da Vistoria, 123",
+                tamanho=75.0,
+                mobiliado="mobiliado",
+                cep="74000-000",
+                referencia="Próximo à praça"
+            )
+            if id_imovel_teste:
+                # Encontrar um horário disponível para agendar
+                horarios_disponiveis = agenda_model.listar_horarios_agenda(
+                    vistoriador_id=id_vist_teste_view,
+                    apenas_disponiveis=True,
+                    data_inicio=datetime.date.today().strftime("%Y-%m-%d"),
+                    data_fim=(datetime.date.today() + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+                )
+                if horarios_disponiveis:
+                    horario_para_agendar = horarios_disponiveis[0]
+                    agenda_model.agendar_vistoria_em_horario(
+                        id_agenda=horario_para_agendar['id_agenda'],
+                        imovel_id=id_imovel_teste,
+                        tipo_vistoria_agendada="ENTRADA"
+                    )
+                    print(f"Agendamento de ENTRADA criado para teste no imóvel ID {id_imovel_teste}.")
+                else:
+                    print("AVISO: Nenhum horário disponível encontrado para criar agendamento de teste.")
+            else:
+                print("ERRO: Falha ao cadastrar imóvel de teste.")
+        else:
+            print("ERRO: Falha ao cadastrar cliente ou imobiliária de teste.")
     else:
         print("ERRO: Não foi possível obter/criar um vistoriador para os testes.")
         sys.exit()
